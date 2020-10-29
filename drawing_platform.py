@@ -1,5 +1,7 @@
 import pygame
 import sys
+import tensorflow as tf
+import numpy as np
 
 # Initializing pygame
 pygame.init()
@@ -13,6 +15,7 @@ pygame.display.set_caption('Handwriting Recognition')
 offset = 10
 pixel_size = (width / 2 - 2 * offset) / 28
 handwriting = [[0] * 28 for _ in range(28)]
+model = tf.keras.models.load_model(sys.argv[1])
 
 # Fonts
 button_font = pygame.font.Font(pygame.font.get_default_font(), 12)
@@ -76,6 +79,12 @@ while True:
     # If mouse comes in contact with reset button
     if mouse and reset_rect.collidepoint(mouse):
         handwriting = [[0] * 28 for _ in range(28)]
+
+    # If mouse comes in contact with classify button
+    if mouse and classify_rect.collidepoint(mouse):
+        number = model.predict(
+            [np.array(handwriting).reshape(1, 28, 28, 1)]
+        ).argmax()
 
     # Updating display
     pygame.display.update()
