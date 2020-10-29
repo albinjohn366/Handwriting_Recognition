@@ -16,6 +16,7 @@ offset = 10
 pixel_size = (width / 2 - 2 * offset) / 28
 handwriting = [[0] * 28 for _ in range(28)]
 model = tf.keras.models.load_model(sys.argv[1])
+number = None
 
 # Fonts
 button_font = pygame.font.Font(pygame.font.get_default_font(), 12)
@@ -46,19 +47,19 @@ while True:
                                 pixel_size, pixel_size, pixel_size)
 
             if handwriting[i][j]:
-                dark = handwriting[i][j]
+                dark = 255 - handwriting[i][j] * 255
                 pygame.draw.rect(window, (dark, dark, dark), pixel)
             else:
                 pygame.draw.rect(window, (0, 0, 0), pixel, 1)
 
             if mouse and pixel.collidepoint(mouse):
-                handwriting[i][j] = 10
+                handwriting[i][j] = 250 / 255
                 if i + 1 < 28:
-                    handwriting[i + 1][j] = 20
+                    handwriting[i + 1][j] = 220 / 255
                 if j + 1 < 28:
-                    handwriting[i][j + 1] = 20
+                    handwriting[i][j + 1] = 220 / 255
                 if i + 1 < 28 and j + 1 < 28:
-                    handwriting[i + 1][j + 1] = 20
+                    handwriting[i + 1][j + 1] = 190 / 255
 
     # Reset button
     reset_rect = pygame.Rect(70, offset + 28 * pixel_size + 10, 60, 20)
@@ -79,12 +80,18 @@ while True:
     # If mouse comes in contact with reset button
     if mouse and reset_rect.collidepoint(mouse):
         handwriting = [[0] * 28 for _ in range(28)]
+        number = None
 
     # If mouse comes in contact with classify button
     if mouse and classify_rect.collidepoint(mouse):
         number = model.predict(
             [np.array(handwriting).reshape(1, 28, 28, 1)]
         ).argmax()
+
+    # If number is to be displayed
+    if number is not None:
+        number_text = button_font.render(str(number), True, (255, 255, 255))
+        window.blit(number_text, (300, height / 2))
 
     # Updating display
     pygame.display.update()
