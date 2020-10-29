@@ -20,6 +20,7 @@ number = None
 
 # Fonts
 button_font = pygame.font.Font(pygame.font.get_default_font(), 12)
+large_font = pygame.font.Font(pygame.font.get_default_font(), 100)
 
 while True:
     window.fill((0, 0, 0))
@@ -43,14 +44,14 @@ while True:
     # Pixels
     for i in range(28):
         for j in range(28):
-            pixel = pygame.Rect(offset + i * pixel_size, offset + j *
+            pixel = pygame.Rect(offset + j * pixel_size, offset + i *
                                 pixel_size, pixel_size, pixel_size)
 
             if handwriting[i][j]:
                 dark = 255 - handwriting[i][j] * 255
                 pygame.draw.rect(window, (dark, dark, dark), pixel)
             else:
-                pygame.draw.rect(window, (0, 0, 0), pixel, 1)
+                pygame.draw.rect(window, (255, 255, 255), pixel, 1)
 
             if mouse and pixel.collidepoint(mouse):
                 handwriting[i][j] = 250 / 255
@@ -90,8 +91,8 @@ while True:
 
     # If number is to be displayed
     if number is not None:
-        number_text = button_font.render(str(number), True, (255, 255, 255))
-        window.blit(number_text, (300, height / 2))
+        number_text = large_font.render(str(number), True, (255, 255, 255))
+        window.blit(number_text, (width - width / 4 - 50, height / 2 - 100))
 
     # Updating display
     pygame.display.update()
