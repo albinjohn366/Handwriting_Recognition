@@ -11,7 +11,7 @@ x_test = x_test.reshape(x_test.shape[0], x_test.shape[1], x_test.shape[2], 1)
 x_train = x_train.reshape(x_train.shape[0], x_train.shape[1], x_train.shape[2], 1)
 
 # Creating the model
-model = tf.keras.Sequential(
+model = tf.keras.Sequential([
 
     # convolution layers for 32 filters
     tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28,
@@ -29,10 +29,10 @@ model = tf.keras.Sequential(
 
     # Output layer
     tf.keras.layers.Dense(10, activation='softmax')
-)
+])
 
 # Train the model
-model.compile(optimizer='adam', loss='categorical crossentropy', metrics=[
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=[
     'accuracy'])
 model.fit(x_train, y_train, epochs=20)
 
